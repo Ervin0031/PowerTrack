@@ -97,6 +97,18 @@ Create an administrator (password is required — there is no default):
 ADMIN_PASSWORD='choose-a-strong-password' uv run python scripts/create_admin.py
 ```
 
+With the API running, you can optionally seed the exercise library from [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset). The importer matches existing exercises by English name, fills in missing demo GIFs, and creates entries that do not exist yet:
+
+```sh
+git clone --depth 1 https://github.com/hasaneyldrm/exercises-dataset /tmp/exercises-dataset
+
+cd backend
+uv run python scripts/import_exercises_dataset.py \
+  --dataset /tmp/exercises-dataset \
+  --user root --password 'your-admin-password' --dry-run
+# Re-run without --dry-run to write the data
+```
+
 Run tests: `uv run pytest`
 
 ### Mobile app
@@ -238,6 +250,18 @@ uv run uvicorn app.main:app --reload
 
 ```sh
 ADMIN_PASSWORD='换成强密码' uv run python scripts/create_admin.py
+```
+
+在 API 运行的状态下，可选使用 [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) 初始化动作库。导入脚本按英文名匹配已有动作，补齐缺失的示范 GIF，并创建尚不存在的动作：
+
+```sh
+git clone --depth 1 https://github.com/hasaneyldrm/exercises-dataset /tmp/exercises-dataset
+
+cd backend
+uv run python scripts/import_exercises_dataset.py \
+  --dataset /tmp/exercises-dataset \
+  --user root --password '管理员密码' --dry-run
+# 去掉 --dry-run 正式写入
 ```
 
 运行测试：`uv run pytest`

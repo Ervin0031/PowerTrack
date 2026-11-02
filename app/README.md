@@ -1,145 +1,148 @@
-# PowerTrack Flutter
+# PowerTrack App
 
-基于 Riverpod + go_router + Dio 的 Flutter 项目，提供完整的启动、路由、网络与本地存储脚手架。
+PowerTrack 的 Flutter 客户端（iOS / Android），基于 Riverpod + go_router + Dio，采用 feature-first 的分层结构。项目总览见仓库根目录的 [README](../README.md)。
+
+> 目录名为 `app/`，但 Dart 包名仍是 `app_flutter`，因此代码中统一使用 `package:app_flutter/...` 绝对导入。
+
+## 功能
+
+- **账号**：登录、注册、邮箱验证、忘记/重置密码、修改密码、登录设备管理。
+- **训练**：训练会话与逐组记录、RPE、休息计时与本地通知、超级组、幽灵组（对照上次训练）、崩溃恢复。
+- **训练日历与恢复**：训练日历、肌群恢复状态、下次可练建议。
+- **动作库**：按肌群 / 器械 / 类型筛选与搜索，本地缓存（sqflite）离线可用，动作详情与历史统计。
+- **模板与计划**：训练模板、模板完成记录、训练周期。
+- **统计**：周容量、1RM 估算、力量标准、体重历史。
+- **AI 教练**：BYOK，接入任意 OpenAI 兼容接口（默认 DeepSeek），API Key 仅保存在设备端；支持会话历史与训练数据工具调用。
+- **社区**：动态流、关注、用户搜索、分享。
+- **设置**：主题、缓存、AI 配置、账号设置。
+- **iOS 增强**：Live Activity / 灵动岛、Apple Health 桥接。
+
+## 技术栈
+
+| 类别 | 包 |
+|------|-----|
+| 状态管理 | `flutter_riverpod` |
+| 路由 | `go_router` |
+| 网络 | `dio` |
+| 本地数据库 | `sqflite` + `path_provider` |
+| 安全存储 | `flutter_secure_storage`（iOS Keychain / Android Keystore） |
+| 代码生成 | `freezed_annotation` + `json_annotation`（暂不可用，见「已知限制」） |
+| UI | Material 3 + `m3e_core` + `material_ui` + 本地 `expressive_snack` |
+| 图表 | `fl_chart` |
+| iOS 原生 | `live_activities`、`flutter_local_notifications` |
 
 ## 目录结构
 
 ```
-lib/
-├── main.dart                              # 入口：async init + ProviderContainer override + AdaptiveTheme
-├── core/
-│   ├── config/
-│   │   └── app_config.dart                # 应用常量：appName / baseUrl / 超时 / UI 设计稿尺寸
-│   ├── storage/
-│   │   ├── token_storage.dart             # access/refresh token 持久化（SharedPreferences）
-│   │   └── app_launch_storage.dart        # 首次启动 / Welcome 已读标记
-│   ├── network/
-│   │   ├── dio_client.dart                # Dio 工厂：装配拦截器链 + refreshDio
-│   │   ├── api_exception.dart             # 业务异常基类 + 4xx/5xx 子类
-│   │   ├── error_message.dart             # 错误 → 用户可读文案
-│   │   ├── network.dart                   # barrel export
-│   │   └── interceptors/
-│   │       ├── auth_interceptor.dart      # 注入 Authorization + 401 自动刷新
-│   │       ├── error_interceptor.dart     # DioException → ApiException
-│   │       └── logging_interceptor.dart   # 请求/响应/错误日志
-│   ├── providers/
-│   │   ├── dio_provider.dart              # sharedPreferences / tokenStorage / appLaunchStorage / dio
-│   │   └── api_providers.dart             # ApiClient 门面（get/post）
-│   ├── router/
-│   │   └── app_router.dart                # GoRouter + 启动分流 redirect
-│   ├── ui/
-│   │   ├── app_theme.dart                 # 亮/暗 ThemeData
-│   │   ├── app_colors.dart                # 颜色 token + BuildContext 扩展
-│   │   ├── app_text_styles.dart           # 字体 token + TextTheme 映射
-│   │   ├── app_radius.dart                # 圆角 token
-│   │   ├── adaptive_spacing.dart          # 间距 token
-│   │   ├── adaptive_breakpoints.dart      # 响应式断点
-│   │   ├── screen_adapt.dart              # 屏幕适配（w/h/radius/icon/font）
-│   │   ├── safe_area_ext.dart             # 安全区快捷扩展
-│   │   └── ui.dart                        # barrel export
-│   └── ...
-├── features/
-│   ├── splash/pages/splash_page.dart      # 启动页：仅延迟 + 跳转，不做路由判断
-│   ├── welcome/pages/welcome_page.dart    # 首次启动引导
-│   ├── auth/pages/login_page.dart         # 登录页（mock）
-│   └── home/pages/home_page.dart          # 首页：主题切换 + 退出登录
-└── shared/
-    └── widgets/
-        ├── section_header.dart            # 分区标题
-        ├── settings_tile.dart             # 设置项 / SettingsGroup
-        └── widgets.dart                   # barrel export
+app/
+├── lib/
+│   ├── main.dart                 # 入口：初始化存储、hydrate token、ProviderContainer
+│   ├── core/
+│   │   ├── config/               # AppConfig：名称、baseUrl、超时、设计稿尺寸
+│   │   ├── database/             # sqflite 初始化 + DAO 基类
+│   │   ├── native/               # Live Activity / Apple Health 桥接
+│   │   ├── network/              # Dio 工厂、拦截器、异常映射
+│   │   ├── providers/            # 全局 Provider（dio 等）
+│   │   ├── router/               # GoRouter + 启动分流 redirect
+│   │   ├── storage/              # TokenStorage、AppLaunchStorage
+│   │   └── ui/                   # 主题、颜色、字体、间距、屏幕适配
+│   ├── features/
+│   │   ├── auth/                 # 登录注册、邮箱验证、密码、设备管理
+│   │   ├── training/             # 训练会话、日历、恢复、休息提醒
+│   │   ├── exercises/            # 动作库、动作详情、动作统计
+│   │   ├── templates/            # 模板与计划
+│   │   ├── stats/                # 容量、1RM、力量标准
+│   │   ├── coach/                # AI 教练（含 skills 工具定义）
+│   │   ├── dynamic/              # 动态流、关注、分享
+│   │   ├── profile/              # 健身档案、体重历史
+│   │   ├── settings/             # 主题、缓存、AI、账号设置
+│   │   ├── home/ splash/ welcome/ permissions/
+│   │   └── ...
+│   └── shared/                   # 复用组件与工具
+├── packages/expressive_snack/    # 本地 Material 3 snackbar 包
+├── assets/                       # 字体、图片等
+├── ios/ android/
+└── pubspec.yaml
 ```
+
+### 分层约定
+
+每个 feature 按需包含四层：
+
+```
+features/{name}/
+├── domain/entities/       # 实体类，纯 Dart，零外部依赖
+├── data/repositories/     # 数据源实现（API、本地存储）
+├── application/providers/ # Riverpod Provider / Notifier
+└── presentation/
+    ├── screens/           # 页面级 Widget
+    └── widgets/           # 可复用组件
+```
+
+- **Domain**：纯 Dart，禁止依赖 Flutter / Riverpod。
+- **Data**：只依赖 Domain，不依赖 Flutter / Riverpod；平台判断由 Application 层注入。
+- **Application**：Riverpod Provider，依赖 Domain + Data，不依赖 Flutter UI。
+- **Presentation**：`ConsumerWidget`，只通过 Provider 取数据，禁止直接 import `*_repository.dart`。
+
+简单页面（如 `splash/`、`welcome/`）可以只有 `presentation/`。
 
 ## 启动流程
 
 `main.dart` 的执行顺序：
 
-1. `WidgetsFlutterBinding.ensureInitialized()`：确保 Flutter 引擎就绪。
-2. `SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge)`：沉浸式布局。
-3. `SharedPreferences.getInstance()`：拿到本地存储实例。
-4. `ProviderContainer(overrides: [...])`：把 `sharedPreferencesProvider` 注入 Riverpod 依赖图。
-5. `UncontrolledProviderScope`：将容器交给 `MyApp`，后续 Provider 都可同步读取。
-6. `MyApp` 监听 `appRouterProvider`，搭配 `MaterialApp.router` 的 Material 3 主题（`themeMode: ThemeMode.system`，跟随系统）。
+1. 绑定 Flutter 引擎，开启 edge-to-edge。
+2. 初始化 `SharedPreferences`（启动标记等非敏感配置）。
+3. `TokenStorage.hydrate()` 把 Keychain / Keystore 中的令牌读进内存——路由守卫与鉴权拦截器都在同步链路上读取 token，必须赶在 `runApp` 前完成。
+4. 初始化本地通知，保证训练休息闹钟可调度。
+5. 用 `ProviderContainer(overrides: ...)` 注入 `sharedPreferences` 与 `tokenStorage`，交给 `UncontrolledProviderScope`。
 
-**为什么用 ProviderContainer 而不是直接 `ProviderScope`？**
-`sharedPreferencesProvider` 是同步 Provider，但 `SharedPreferences.getInstance()` 是异步的。提前在 `main` 中 await 一次，再通过 `overrideWithValue` 注入，可以让所有下游 Provider（`tokenStorageProvider`、`dioProvider`、`appRouterProvider`）保持同步读取，避免在 Widget 里再触发一次异步等待。
+如果跳过 `hydrate()`，应用会以未登录状态启动。
 
-## 路由与启动分流
+## 本地运行
 
-`core/router/app_router.dart` 中定义：
+```sh
+cd app
+fvm flutter pub get
+fvm flutter run --dart-define=BASE_URL=http://localhost:8000
+```
 
-- 路径常量：`AppRoutes.splash` / `welcome` / `login` / `home`。
-- `initialLocation: /splash`。
-- `redirect` 在每次导航时按以下规则统一派发：
+- 项目通过 FVM 固定 Flutter 3.47.9（见 `.fvmrc`）；本机版本一致时也可直接用 `flutter`。
+- iOS 构建前请在 Xcode 中选择你自己的开发团队，仓库刻意不包含签名团队信息。
 
-| 当前路径 | 已看 Welcome | 已登录 | 目标 |
-|---|---|---|---|
-| `/splash` | — | — | 放行，由 splash 页面控制后续 |
-| `/welcome` | 否 | — | 放行 |
-| `/welcome` | 是 | 是 | `/home` |
-| `/welcome` | 是 | 否 | `/login` |
-| 其它 | 否 | — | `/welcome` |
-| 其它 | 是 | 否 | `/login` |
-| `/login` | 是 | 是 | `/home` |
-| 其它 | 是 | 是 | 放行 |
+### 编译期配置
 
-`splash_page.dart` 只负责 800ms 启动延迟 + `context.go(AppRoutes.home)`，路由判断完全交给 `redirect`，避免两处重复判断状态。
-
-## 网络层
-
-`core/network/dio_client.dart` 创建的 Dio 实例带三段拦截器：
-
-1. `AuthInterceptor`：自动注入 `Authorization: Bearer <accessToken>`；401 时用 `refreshDio`（独立的最小客户端，避免递归刷新）调用 `/api/auth/refresh`，成功后用新 token 重放原请求。
-2. `LoggingInterceptor`（可关）：用 `logger` 包打印请求/响应/错误。
-3. `ErrorInterceptor`：把 `DioException` 映射成 `ApiException` 子类（`BadRequestException` / `UnauthorizedException` / `ServerException` / `NetworkException` 等），业务层只看业务异常。
-
-UI 展示用 `userFacingErrorMessage(error)` 抽取对用户友好的文案，避免暴露 Dio / ApiException 包装层。
-
-## 本地存储
-
-- `TokenStorage`：access / refresh / expiresAt，通过 `SharedPreferences` 持久化。`hasToken` 给路由守卫判断登录态。
-- `AppLaunchStorage`：`hasSeenWelcome` / `markWelcomeSeen()`。
-
-## 已知限制
-
-- **build_runner 在 Dart 3.12.2 下不可用**：`analyzer_plugin` 与新版 `analyzer` 类型不兼容（`Element` vs `Element2`），Freezed / riverpod_generator 无法生成 `*.g.dart`。脚手架使用手写 Provider 与手写 `fromJson` / `toJson`。
-- **Token 存储**：`SharedPreferences` 不是高安全级别方案；正式环境如需更严格保护可替换为 `flutter_secure_storage`，`TokenStorage` 对外接口保持不变。
-- **依赖固定版本**：无；已移除 `adaptive_theme`，统一使用 Flutter 内置 Material 3 主题（`ThemeMode.system` 跟随系统）。
+| `--dart-define` | 默认值 | 说明 |
+|-----------------|--------|------|
+| `BASE_URL` | `http://localhost:8000` | 后端地址 |
+| `APP_NAME` | `PowerTrack` | 应用标题 |
+| `ENABLE_HTTP_LOG` | debug 下开启 | 网络请求日志 |
+| `SHOW_FPS` | debug 下开启 | 右上角 FPS 浮层 |
+| `SHOW_PERFORMANCE_OVERLAY` | `false` | Flutter 性能图 |
 
 ## 添加新 Feature
 
-1. `lib/features/<name>/` 下按需建目录（脚手架仅放了 `pages/`，按业务复杂度可加 `application/providers/`、`data/repositories/`、`domain/entities/`）。
-2. 在 `core/router/app_router.dart` 注册路由：
-   ```dart
-   GoRoute(path: '/foo', builder: (_, _) => const FooPage()),
-   ```
-3. 复杂页面用 `application/providers/` 暴露 Riverpod Provider，业务 Notifier 内部协调 `ApiClient` / Repository。
-4. UI 通过 `ref.watch(...)` 读取状态，避免在 Widget 中直接调 Dio。
+1. 创建 `lib/features/{name}/` 及所需的 `domain/`、`data/`、`application/`、`presentation/` 子目录。
+2. 先写 Domain 实体 → Data 仓库 → Application Provider → Presentation 页面。
+3. 在 `lib/core/router/app_router.dart` 注册路由。
+4. 使用 `package:app_flutter/...` 绝对导入，避免相对路径。
+5. 运行 `fvm flutter analyze` 检查分层边界与 lint。
+
+## 已知限制
+
+- **build_runner 不可用**：`analyzer_plugin` 与 Dart 3.12.2 的 `analyzer` 版本冲突，Freezed / riverpod_generator 无法生成代码。实体目前手写 `fromJson` / `toJson` 与手写 Provider；`pubspec.yaml` 中保留了对 `analyzer_plugin` 的版本覆盖，工具链恢复后应移除。
+- **令牌存储**：`flutter_secure_storage` 落盘 + 内存缓存，保证 `accessToken` 等 getter 同步可读；旧版本存在 `SharedPreferences` 的明文令牌会在 `hydrate()` 时自动迁移。
 
 ## 验证命令
 
-```bash
-flutter pub get
+```sh
+fvm flutter analyze                 # 静态分析与分层检查
+fvm flutter test                    # 测试
+dart format lib test                # 格式化
 
-flutter analyze   # 静态分析
-
-flutter test      # 运行测试
-
-dart format lib test
-
-# 检查业务异常用法（应返回空）
+# 业务层不应直接使用 DioException（应返回空）
 grep -r "DioException" lib/features/ lib/shared/
 ```
 
-## 技术栈
+## 许可证
 
-| 类别 | 包 |
-|---|---|
-| 状态管理 | `flutter_riverpod` |
-| 路由 | `go_router` |
-| 网络 | `dio` |
-| 本地存储 | `shared_preferences` |
-| 主题 | Flutter Material 3（`useMaterial3: true`，`ThemeMode.system`）|
-| 日志 | `logger` |
-| 代码生成（占位） | `freezed_annotation` + `json_annotation` |
-| 构建工具（占位） | `build_runner` |
+整个 PowerTrack 项目采用 [AGPL-3.0](../LICENSE)。`packages/` 下的本地包采用 MIT 许可，许可文件见各包目录。
