@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  网络明文流量策略。
+  当前后端多为 HTTP（局域网 / 调试服务器）；上线改为 HTTPS 后，
+  建议将 cleartextTrafficPermitted 改为 false，或仅对指定域名放开。
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

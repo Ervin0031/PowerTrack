@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Local AI / editor settings
+.claude/
+.vscode/
+.idea/
+*.iml
+
+# Environment files — keep the examples
+.env
+.env.*
+!.env.example
+backend/secret/.env.*
+!backend/secret/.env.example
+
+# Logs
+*.log

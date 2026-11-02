@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+      debug / profile 额外声明：Flutter 工具热重载、调试通信依赖联网。
+      正式权限已在 main/AndroidManifest.xml，此处保留不影响合并结果。
+    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+</manifest>
