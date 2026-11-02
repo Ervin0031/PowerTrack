@@ -19,6 +19,25 @@ An open-source strength-training tracker: a Flutter mobile app, a FastAPI backen
   Training home · Workout session · Statistics · Profile
 </p>
 
+<p align="center">
+  <img src="images/IMG_1066.PNG" alt="AI coach" height="420" />
+  <img src="images/IMG_1067.PNG" alt="Muscle recovery" height="420" />
+  <img src="images/IMG_1068.PNG" alt="Workout template" height="420" />
+  <img src="images/IMG_1069.PNG" alt="Exercise library" height="420" />
+</p>
+
+<p align="center">
+  AI coach · Muscle recovery · Templates · Exercise library
+</p>
+
+<p align="center">
+  <img src="images/IMG_1070.PNG" alt="Training calendar" height="420" />
+</p>
+
+<p align="center">
+  Training calendar
+</p>
+
 ## Features
 
 - **Workout tracking** — sets, reps, weight, RPE, rest timer, supersets, ghost sets against the previous session, and crash-safe session recovery.
