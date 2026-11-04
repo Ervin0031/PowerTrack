@@ -1,53 +1,142 @@
 <p align="center">
-  <img src="images/logo.png" alt="PowerTrack logo" width="120" />
+  <strong>English</strong> · <a href="README.zh-CN.md">中文</a>
 </p>
+
+<div align="center">
+
+<img src="images/logo.png" alt="PowerTrack logo" width="128" />
 
 # PowerTrack
 
-**English** · [中文](#中文)
+**Self-hosted strength training, with a coach on your key.**
 
-An open-source strength-training tracker: a Flutter mobile app, a FastAPI backend, and a React admin dashboard. Track workouts set by set, visualize strength progress, and get coaching suggestions from an LLM you bring yourself.
+An open-source tracker for people who lift: a Flutter app for iOS and Android, a FastAPI backend, and a React admin. Log every set, watch volume and estimated strength move, and ask an OpenAI-compatible model that can read those sessions. The API key stays on the device. You host the database.
 
-<p align="center">
-  <img src="images/IMG_1050.JPG" alt="Training home" height="420" />
-  <img src="images/IMG_1064.PNG" alt="Workout session" height="420" />
-  <img src="images/IMG_1062.PNG" alt="Statistics" height="420" />
-  <img src="images/IMG_1063.PNG" alt="Profile" height="420" />
-</p>
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Ervin0031/PowerTrack?style=social)](https://github.com/Ervin0031/PowerTrack/stargazers)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
 
-<p align="center">
-  Training home · Workout session · Statistics · Profile
-</p>
+[Why PowerTrack](#why-powertrack) · [Features](#features) · [Screenshots](#screenshots) · [Architecture](#architecture) · [Getting started](#getting-started)
 
-<p align="center">
-  <img src="images/IMG_1066.PNG" alt="AI coach" height="420" />
-  <img src="images/IMG_1067.PNG" alt="Muscle recovery" height="420" />
-  <img src="images/IMG_1068.PNG" alt="Workout template" height="420" />
-  <img src="images/IMG_1069.PNG" alt="Exercise library" height="420" />
-</p>
+</div>
 
-<p align="center">
-  AI coach · Muscle recovery · Templates · Exercise library
-</p>
+The phone UI and the coach's replies are Simplified Chinese today. The screenshots below are that interface.
 
-<p align="center">
-  <img src="images/IMG_1070.PNG" alt="Training calendar" height="420" />
-</p>
+## Screenshots
 
-<p align="center">
-  Training calendar
-</p>
+### Train
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="images/IMG_1050.JPG" alt="Training home with this week's sessions, volume, and a recovery summary" width="240" />
+      <br /><sub><b>Training home</b><br />This week, volume, recovery</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/IMG_1064.PNG" alt="Live workout logging barbell bench press sets, reps, and weight" width="240" />
+      <br /><sub><b>Live session</b><br />Sets, reps, weight, estimated 1RM</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/IMG_1068.PNG" alt="Back-day deload template with planned sets and a start button" width="240" />
+      <br /><sub><b>Template</b><br />A reusable session you can start</sub>
+    </td>
+  </tr>
+</table>
+
+### Progress
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="images/IMG_1062.PNG" alt="Statistics for the month: volume, session count, duration, average RPE, and a weekly volume chart" width="240" />
+      <br /><sub><b>Statistics</b><br />Volume, time, RPE, weekly trend</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/IMG_1067.PNG" alt="Muscle recovery screen showing which regions are ready to train" width="240" />
+      <br /><sub><b>Recovery</b><br />What is ready, and what is not</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/IMG_1070.PNG" alt="Training calendar with completed days and a session on the selected date" width="240" />
+      <br /><sub><b>Calendar</b><br />Every finished session, by day</sub>
+    </td>
+  </tr>
+</table>
+
+### Coach, library, profile
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="images/IMG_1066.PNG" alt="AI coach conversation list, including recovery, warm-up, and program prompts" width="240" />
+      <br /><sub><b>AI coach</b><br />Your key, your sessions</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/IMG_1069.PNG" alt="Exercise library filtered by muscle, equipment, and type, with Chinese and English names" width="240" />
+      <br /><sub><b>Exercise library</b><br />Muscle, equipment, type</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="images/IMG_1063.PNG" alt="Profile with calendar, templates, exercises, fitness profile, and body-weight trend" width="240" />
+      <br /><sub><b>Profile</b><br />Templates, history, body weight</sub>
+    </td>
+  </tr>
+</table>
+
+## Why PowerTrack
+
+PowerTrack is the tracker you run when you want a real training log and a coach, on hardware you control. Cloud gym apps keep the database. A bare self-hosted log usually stops at sets and reps. PowerTrack is the middle: your Postgres, a native phone app, and a model you pay for yourself.
+
+| | PowerTrack | Typical cloud gym app | Plain self-hosted log |
+| --- | :---: | :---: | :---: |
+| Training data in a database you run | Yes | Their cloud | Yes |
+| Native iOS and Android app | Yes | Usually | Rarely |
+| AI coach on a key you bring | Yes | Often paid | Usually none |
+| Logger still works with no model key | Yes | Yes | Yes |
+| Blocks, recovery, estimated 1RM | Yes | Often gated | Rarely |
+| Admin for users and the exercise catalog | Yes | Vendor console | Rarely |
+
+With no model key configured, the app is still the logger, the calendar, and the stats. Add a key when you want the coach.
+
+A star on the [repo](https://github.com/Ervin0031/PowerTrack) helps other lifters find it.
 
 ## Features
 
-- **Workout tracking** — sets, reps, weight, RPE, rest timer, supersets, ghost sets against the previous session, and crash-safe session recovery.
-- **Exercise library** — searchable and filterable by muscle group / equipment, cached locally for offline use.
-- **Templates & programs** — reusable workout templates, training blocks, and next-session prescriptions.
-- **Calendar & statistics** — training calendar, weekly volume, estimated 1RM, strength standards, and muscle-group recovery.
-- **AI coach (BYOK)** — connect any OpenAI-compatible endpoint (DeepSeek by default); the API key stays on the device.
-- **Accounts** — registration, email verification, password reset, device/session management.
-- **Admin dashboard** — React + TanStack Router + shadcn/ui.
-- **iOS extras** — Live Activity / Dynamic Island support.
+### Log and train
+
+- **Sets as you train them** — reps, weight in kilograms, duration, RPE, and a set type (warm-up, working, drop, cool-down), with a rest timer.
+- **Ghost sets** — the last time you did that exercise, shown beside the logger as a reference.
+- **Load that follows the work** — a suggested working weight from recent estimated 1RM, and RPE-based adjustments for the next set.
+- **Supersets** — exercises that share a superset are grouped in the session.
+- **Templates, blocks, prescriptions** — reusable sessions, a training block, and a next-time load for a lift.
+- **Crash recovery** — the open session is stored in on-device SQLite, so a restarted app can pick it up.
+- **On iOS** — a Live Activity / Dynamic Island for the session in progress, and an Apple Health bridge for steps, active energy, body mass, and resting heart rate. A finished strength session can be written back to Health.
+
+### Progress
+
+- **This week at a glance** — sessions, streak, volume, and a deload hint when the recent weeks say you should ease off.
+- **Calendar** — finished sessions by day.
+- **Statistics** — volume, time, average RPE, a weekly volume chart, and per-muscle sets against weekly landmark bands.
+- **Estimated 1RM** — Epley for 1–10 reps, or an RPE percentage when you log RPE.
+- **Strength standards** — strength relative to body weight, squat / bench / deadlift, plus DOTS and Wilks when the profile has gender and body weight.
+- **Recovery** — which regions are ready and which still need time.
+- **Body and profile** — body-weight history, and a fitness profile with goal, experience, injuries, BMR, TDEE, and a calorie target.
+
+### AI coach (bring your own key)
+
+- **Any OpenAI-compatible endpoint.** The default is DeepSeek (`https://api.deepseek.com/v1`, model `deepseek-flash`). A local `http://localhost` endpoint is allowed for development; other hosts need HTTPS.
+- **The key stays on the phone.** It is stored in the iOS Keychain or Android Keystore and is not sent to the PowerTrack API. Chat text is saved on your server so the thread follows the account.
+- **Grounded in your log.** The model can read your profile, recovery, recent sessions, templates, exercise stats, and volume, then answer in Simplified Chinese. The composer includes a microphone for dictation and prefers a Chinese recognizer when the device has one.
+- **Plans you confirm.** It can propose a session or the next exercise. Starting a proposal opens it as a normal workout. If you ask, it can also create or edit your exercises, templates, and profile, or delete a session you name.
+- **Optional server key.** `LLM_API_KEY` on the backend enables a streaming coach endpoint for API clients. The phone app does not use that key. Leave it empty and that endpoint stays disabled.
+
+Coaching text is general training feedback. It is not a diagnosis or a medical prescription.
+
+### Admin and self-host
+
+- **Accounts** — register, verify email, reset or change a password, and review signed-in devices. Auth is a JWT access token plus a refresh token.
+- **A feed on your server** — follow other accounts on the same instance, share a finished workout, and comment. Nothing is posted to a third-party network.
+- **React admin** — manage users and the exercise catalog (exercises, equipment, muscle groups), including image upload. The dashboard is based on shadcn-admin.
+- **The data stack** — PostgreSQL, Redis, Celery (a daily database backup kept for 30 days), and S3-compatible storage (RustFS) for exercise images.
+- **A catalog you can import** — optional import from [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset), matched by English name, with missing demo GIFs filled in.
 
 ## Architecture
 
@@ -56,25 +145,30 @@ PowerTrack/
 ├── app/        Flutter client (iOS / Android)
 ├── backend/    FastAPI + SQLModel + PostgreSQL
 ├── frontend/   React admin dashboard
-└── docs/       Feature documentation (Chinese)
+├── docs/       Feature notes (Chinese)
+└── images/     Screenshots used above
 ```
 
 | Part | Stack |
-|------|-------|
-| `app/` | Flutter 3.47 · Dart ^3.12 · Riverpod · go_router · Dio · sqflite |
-| `backend/` | Python ≥3.10 · FastAPI · SQLModel · PostgreSQL · Redis · Celery · Alembic |
+| --- | --- |
+| `app/` | Flutter 3.47.9 · Dart ^3.12.2 · Riverpod · go_router · Dio · sqflite |
+| `backend/` | Python ≥3.10 · FastAPI · SQLModel · PostgreSQL 16 · Redis 7 · Celery · Alembic |
 | `frontend/` | Vite 8 · React 19 · TanStack Router · Tailwind v4 · shadcn/ui |
 
-The API is served under `/api/v1` and authenticated with JWT bearer tokens. Health check: `GET /health`.
+The API is served under `/api/v1` and authenticated with JWT bearer tokens. Health check: `GET /health`. Interactive docs: <http://localhost:8000/docs> once the API is running.
+
+The phone calls your API for training data. Model requests go from the device to the endpoint you configured, with tool calls coming back to that same API under your login.
 
 ## Getting started
 
+Three parts, each with its own toolchain. Run commands from the directory named in the block.
+
 ### Prerequisites
 
-- Python ≥3.10 with [uv](https://docs.astral.sh/uv/)
-- Flutter 3.47 with [FVM](https://fvm.app/) (see `app/.fvmrc`)
-- Node.js 20+ with pnpm
-- PostgreSQL 16 and Redis 7 (local install or Docker)
+- Python ≥3.10 and [uv](https://docs.astral.sh/uv/)
+- Flutter 3.47.9 via [FVM](https://fvm.app/) (pinned in `app/.fvmrc`)
+- Node.js 20+ and pnpm
+- PostgreSQL 16 and Redis 7, installed locally or via the Docker path below
 
 ### Backend
 
@@ -82,7 +176,7 @@ The API is served under `/api/v1` and authenticated with JWT bearer tokens. Heal
 cd backend
 uv sync
 
-# Create your local env file, then edit DATABASE_URL / JWT_SECRET_KEY
+# Create the local env file, then set DATABASE_URL and JWT_SECRET_KEY
 cp secret/.env.example secret/.env.development
 
 uv run alembic upgrade head
@@ -91,13 +185,60 @@ uv run uvicorn app.main:app --reload
 
 API docs: <http://localhost:8000/docs>
 
-Create an administrator (password is required — there is no default):
+Create an administrator. The password is required; the script has no default. Username defaults to `root`, email to `root@powertrack.local` (`ADMIN_USERNAME` / `ADMIN_EMAIL` override them):
 
 ```sh
 ADMIN_PASSWORD='choose-a-strong-password' uv run python scripts/create_admin.py
 ```
 
-With the API running, you can optionally seed the exercise library from [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset). The importer matches existing exercises by English name, fills in missing demo GIFs, and creates entries that do not exist yet:
+Tests: `uv run pytest`
+
+Celery is optional for local API work. The worker runs background jobs, including the daily database backup:
+
+```sh
+uv run celery -A app.core.celery.celery_app worker --loglevel=info
+```
+
+### Mobile app
+
+```sh
+cd app
+fvm flutter pub get
+fvm flutter run --dart-define=BASE_URL=http://localhost:8000
+```
+
+Point `BASE_URL` at an address the phone can reach. An iOS Simulator can use `localhost`. The standard Android emulator reaches the host at `10.0.2.2`, and a physical device needs your computer's LAN address. For iOS, select your own development team in Xcode before building. The repository ships without one.
+
+Tests: `fvm flutter test`
+
+### Admin dashboard
+
+```sh
+cd frontend
+pnpm install
+cp .env.example .env      # set VITE_API_URL, for example http://localhost:8000
+pnpm run dev
+```
+
+Vite serves the dashboard at <http://localhost:5173>. If the browser blocks API calls, add that origin to `CORS_ALLOWED_ORIGINS` in the backend env file.
+
+Tests: `pnpm run test`
+
+### Docker
+
+Compose builds the backend from this repository. It starts the API, PostgreSQL 16, Redis 7, a Celery worker, Celery beat, RustFS, and a one-shot container that runs `alembic upgrade head`.
+
+```sh
+cd backend
+cp secret/.env.example secret/.env.production   # fill in real values first
+docker compose up -d --build
+```
+
+Change the compose defaults (`postgres` / `postgres`, `rustfsadmin`) before you expose the stack. See [Security notes](#security-notes).
+
+### Exercise library (optional)
+
+With the API running, import [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset). The script matches existing exercises by English name, fills in missing demo GIFs, and creates entries that are not there yet.
 
 ```sh
 git clone --depth 1 https://github.com/hasaneyldrm/exercises-dataset /tmp/exercises-dataset
@@ -109,62 +250,34 @@ uv run python scripts/import_exercises_dataset.py \
 # Re-run without --dry-run to write the data
 ```
 
-Run tests: `uv run pytest`
-
-### Mobile app
-
-```sh
-cd app
-fvm flutter pub get
-fvm flutter run --dart-define=BASE_URL=http://localhost:8000
-```
-
-For iOS, select your own development team in Xcode before building. The repository intentionally ships without one.
-
-### Admin dashboard
-
-```sh
-cd frontend
-pnpm install
-cp .env.example .env      # set VITE_API_URL
-pnpm run dev
-```
-
-Run tests: `pnpm run test`
-
-### Docker (alternative)
-
-```sh
-cd backend
-cp secret/.env.example secret/.env.production   # fill in real values first
-docker compose up -d --build
-```
-
 ## Configuration
 
-Backend settings are read from `backend/secret/.env.<ENV>` (`ENV` defaults to `development`). Start from `backend/secret/.env.example`; never commit real env files.
+Backend settings are read from `backend/secret/.env.<ENV>` (`ENV` defaults to `development`). Start from `backend/secret/.env.example`. Real env files are git-ignored.
 
 | Variable | Purpose |
-|----------|---------|
+| --- | --- |
 | `DATABASE_URL` | PostgreSQL connection string |
-| `JWT_SECRET_KEY` | JWT signing key (min. 32 chars) |
+| `JWT_SECRET_KEY` | JWT signing key (at least 32 characters) |
 | `REDIS_CONNECTION_URL` | Redis connection string |
-| `STORAGE_*` | S3-compatible object storage (RustFS) |
-| `LLM_BASE_URL` / `LLM_API_KEY` | Optional server-side OpenAI-compatible LLM |
-| `RESEND_API_KEY` / `EMAIL_*` | Email verification and password reset |
+| `CELERY_BROKER_URL` / `CELERY_RESULT_BACKEND` | Celery broker and result backend |
+| `STORAGE_*` | S3-compatible object storage (RustFS) for exercise images |
+| `LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL` | Optional server-side OpenAI-compatible coach. An empty key disables it. The phone app does not use this key. |
+| `EMAIL_*` | SMTP settings for email verification and password reset |
 
-Client configuration is injected at build time:
+The phone app reads its API address at build time:
 
 ```sh
 fvm flutter run --dart-define=BASE_URL=https://api.example.com
 ```
 
+Other `--dart-define` flags are listed in [`app/README.md`](app/README.md).
+
 ## Security notes
 
 - Real credentials live only in `backend/secret/.env.*`, which is git-ignored. Never commit them.
-- Change every default in `docker-compose.yml` (`postgres/postgres`, `rustfsadmin`) before deploying.
-- The default database and storage ports are exposed in the compose file for local development only.
-- The AI coach is BYOK: user API keys are stored in the device's secure storage and never sent to the backend.
+- Change every default in `docker-compose.yml` (`postgres` / `postgres`, `rustfsadmin`) before deploying. The compose file publishes the database and storage ports for local development.
+- The phone coach is BYOK. The user's model API key is stored in the device secure store and is not sent to the backend. Conversation text is stored on your server. Prompts that include training context are sent to the model provider you configured.
+- Email verification and password reset go out through the SMTP settings in `EMAIL_*`.
 
 ## Deployment
 
@@ -172,7 +285,15 @@ fvm flutter run --dart-define=BASE_URL=https://api.example.com
 
 ## Contributing
 
-Issues and pull requests are welcome. Please keep the layer boundaries described in `AGENTS.md` intact, run the relevant tests, and avoid committing secrets or local machine paths.
+Issues and pull requests are welcome. Keep the layer boundaries in [`AGENTS.md`](AGENTS.md), run the tests for the part you touch, and do not commit secrets or local machine paths.
+
+```sh
+cd backend && uv run pytest
+cd app && fvm flutter analyze && fvm flutter test
+cd frontend && pnpm run lint && pnpm run test
+```
+
+Backend format and types: `black . && ruff check . && mypy .` from `backend/`.
 
 ## License
 
@@ -184,160 +305,5 @@ The `frontend/` directory retains the upstream MIT license of shadcn-admin, and 
 
 - Admin dashboard based on [shadcn-admin](https://github.com/satnaing/shadcn-admin) by Sat Naing (MIT).
 - Backend scaffold generated by [Forge](https://github.com/ning3739/forge).
-- Google Sans Flex font, distributed under the SIL Open Font License (`app/assets/fonts/Google_Sans_Flex/OFL.txt`).
-- `expressive_*` and `material_*` Flutter packages by Kostia Sokolovskyi (MIT); see the `LICENSE` files under `app/packages/`.
-
----
-
-## 中文
-
-一个开源的健身训练追踪系统，包含 Flutter 移动端、FastAPI 后端和 React 管理后台。逐组记录训练、可视化力量进步，并接入你自带的 LLM 作为 AI 教练。
-
-## 功能
-
-- **训练追踪** — 组数、次数、重量、RPE、休息计时、超级组、对照上次训练的幽灵组，以及崩溃后可恢复的进行中会话。
-- **动作库** — 按肌群 / 器械筛选与搜索，本地缓存，离线可用。
-- **模板与计划** — 可复用的训练模板、训练周期和下次课处方。
-- **日历与统计** — 训练日历、周容量、1RM 估算、力量标准、肌群恢复状态。
-- **AI 教练（BYOK）** — 支持任意 OpenAI 兼容接口（默认 DeepSeek），API Key 仅保存在设备端。
-- **账号体系** — 注册、邮箱验证、重置密码、设备与会话管理。
-- **管理后台** — React + TanStack Router + shadcn/ui。
-- **iOS 增强** — 灵动岛 / Live Activity。
-
-## 架构
-
-```
-PowerTrack/
-├── app/        Flutter 客户端（iOS / Android）
-├── backend/    FastAPI + SQLModel + PostgreSQL
-├── frontend/   React 管理后台
-└── docs/       功能文档
-```
-
-| 模块 | 技术栈 |
-|------|--------|
-| `app/` | Flutter 3.47 · Dart ^3.12 · Riverpod · go_router · Dio · sqflite |
-| `backend/` | Python ≥3.10 · FastAPI · SQLModel · PostgreSQL · Redis · Celery · Alembic |
-| `frontend/` | Vite 8 · React 19 · TanStack Router · Tailwind v4 · shadcn/ui |
-
-接口统一前缀 `/api/v1`，使用 JWT Bearer 鉴权。健康检查：`GET /health`。
-
-## 快速开始
-
-### 环境要求
-
-- Python ≥3.10 和 [uv](https://docs.astral.sh/uv/)
-- Flutter 3.47 和 [FVM](https://fvm.app/)（见 `app/.fvmrc`）
-- Node.js 20+ 和 pnpm
-- PostgreSQL 16、Redis 7（本地安装或 Docker）
-
-### 后端
-
-```sh
-cd backend
-uv sync
-
-# 创建本地环境文件，并填入 DATABASE_URL / JWT_SECRET_KEY
-cp secret/.env.example secret/.env.development
-
-uv run alembic upgrade head
-uv run uvicorn app.main:app --reload
-```
-
-接口文档：<http://localhost:8000/docs>
-
-创建管理员（密码必须显式提供，脚本没有默认密码）：
-
-```sh
-ADMIN_PASSWORD='换成强密码' uv run python scripts/create_admin.py
-```
-
-在 API 运行的状态下，可选使用 [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) 初始化动作库。导入脚本按英文名匹配已有动作，补齐缺失的示范 GIF，并创建尚不存在的动作：
-
-```sh
-git clone --depth 1 https://github.com/hasaneyldrm/exercises-dataset /tmp/exercises-dataset
-
-cd backend
-uv run python scripts/import_exercises_dataset.py \
-  --dataset /tmp/exercises-dataset \
-  --user root --password '管理员密码' --dry-run
-# 去掉 --dry-run 正式写入
-```
-
-运行测试：`uv run pytest`
-
-### 移动端
-
-```sh
-cd app
-fvm flutter pub get
-fvm flutter run --dart-define=BASE_URL=http://localhost:8000
-```
-
-iOS 构建前请在 Xcode 中选择你自己的开发团队，仓库刻意不包含签名团队信息。
-
-### 管理后台
-
-```sh
-cd frontend
-pnpm install
-cp .env.example .env      # 设置 VITE_API_URL
-pnpm run dev
-```
-
-运行测试：`pnpm run test`
-
-### Docker（可选）
-
-```sh
-cd backend
-cp secret/.env.example secret/.env.production   # 先填入真实配置
-docker compose up -d --build
-```
-
-## 配置
-
-后端从 `backend/secret/.env.<ENV>` 读取配置（`ENV` 默认为 `development`）。请以 `backend/secret/.env.example` 为模板，真实环境文件不要提交。
-
-| 变量 | 用途 |
-|------|------|
-| `DATABASE_URL` | PostgreSQL 连接串 |
-| `JWT_SECRET_KEY` | JWT 签名密钥（至少 32 字符） |
-| `REDIS_CONNECTION_URL` | Redis 连接串 |
-| `STORAGE_*` | S3 兼容对象存储（RustFS） |
-| `LLM_BASE_URL` / `LLM_API_KEY` | 可选的服务器端 OpenAI 兼容 LLM |
-| `RESEND_API_KEY` / `EMAIL_*` | 邮箱验证与重置密码 |
-
-客户端地址在构建时注入：
-
-```sh
-fvm flutter run --dart-define=BASE_URL=https://api.example.com
-```
-
-## 安全提示
-
-- 真实凭据只放在 `backend/secret/.env.*`，该目录已被 git 忽略，切勿提交。
-- 部署前务必修改 `docker-compose.yml` 中的默认值（`postgres/postgres`、`rustfsadmin`）。
-- compose 中暴露的数据库与对象存储端口仅供本地开发使用。
-- AI 教练采用 BYOK：用户的 API Key 保存在设备安全存储中，不会上传到后端。
-
-## 部署
-
-`.github/workflows/deploy.yml` 会在推送到 `main` 时通过 SSH 部署后端。它需要仓库 Secrets：`SSH_HOST`、`SSH_USER`、`SSH_PRIVATE_KEY`，并假设项目位于 `/opt/PowerTrackV2`。请根据你自己的服务器调整或删除该工作流。
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request。请保持 `AGENTS.md` 中约定的分层边界，运行相关测试，并且不要提交密钥或本机路径。
-
-## 许可证
-
-本项目采用 [GNU Affero General Public License v3.0](LICENSE)。如果你将修改后的版本作为网络服务运行，必须公开对应的源代码。
-
-`frontend/` 目录保留上游 shadcn-admin 的 MIT 许可，`backend/` 脚手架保留其 MIT 许可，二者与整体 AGPL 许可兼容。
-
-## 致谢
-
-- 管理后台基于 [shadcn-admin](https://github.com/satnaing/shadcn-admin)（作者 Sat Naing，MIT）。
-- 后端脚手架由 [Forge](https://github.com/ning3739/forge) 生成。
-- Google Sans Flex 字体遵循 SIL Open Font License（`app/assets/fonts/Google_Sans_Flex/OFL.txt`）。
-- `expressive_*` 与 `material_*` Flutter 包由 Kostia Sokolovskyi 提供（MIT），许可文件见 `app/packages/`。
+- Google Sans Flex, distributed under the SIL Open Font License (`app/assets/fonts/Google_Sans_Flex/OFL.txt`).
+- `expressive_*` and `material_*` Flutter packages by Kostia Sokolovskyi (MIT). License files are under `app/packages/`.
